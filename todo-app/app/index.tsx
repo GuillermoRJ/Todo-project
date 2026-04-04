@@ -10,7 +10,7 @@ export default function index() {
   }, []);
 
   const getTasks = async () => {
-    const URL = "http://localhost:8081";
+    const URL = "http://localhost:3000";
     const response = await fetch(URL, {
       method: "GET",
     });
@@ -21,13 +21,6 @@ export default function index() {
   return (
     <ScrollView>
       <Text>ola</Text>
-      <TaskCard
-        id={1}
-        title={""}
-        description={""}
-        completed={false}
-        created_at={""}
-      />
     </ScrollView>
   );
 }
