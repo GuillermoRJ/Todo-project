@@ -1,6 +1,5 @@
 import { Text, View } from "react-native";
 import React from "react";
-import { Href, router } from "expo-router";
 
 interface TaskCardProps {
   id: number;
