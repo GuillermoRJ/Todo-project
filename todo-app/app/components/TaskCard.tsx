@@ -1,4 +1,4 @@
-import { Text, Pressable, View, Button, TextInput, Alert } from "react-native";
+import { Text, Pressable, View, TextInput, Alert, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { router } from "expo-router";
 
@@ -17,7 +17,7 @@ export default function TaskCard(props: TaskCardProps) {
   const [editedDescription, setEditedDescription] = useState(props.description);
 
   const toggleStatus = async () => {
-    const URL = `http://localhost:3000/todos/${props.id}`;
+    const URL = `http://10.10.146.60:3000/todos/${props.id}`;
     try {
       await fetch(URL, {
         method: "PUT",
@@ -43,7 +43,7 @@ export default function TaskCard(props: TaskCardProps) {
       return;
     }
 
-    const URL = `http://localhost:3000/todos/${props.id}`;
+    const URL = `http://10.10.146.60:3000/todos/${props.id}`;
     try {
       await fetch(URL, {
         method: "PUT",
@@ -68,7 +68,7 @@ export default function TaskCard(props: TaskCardProps) {
   };
 
   const deleteTask = async () => {
-    const URL = `http://localhost:3000/todos/${props.id}`;
+    const URL = `http://10.10.146.60:3000/todos/${props.id}`;
     try {
       await fetch(URL, { method: "DELETE" });
       props.onRefresh();
@@ -77,44 +77,150 @@ export default function TaskCard(props: TaskCardProps) {
     }
   };
 
+  
   if (isEditing) {
     return (
-      <View>
+      <View style={[styles.card, styles.editingCard]}>
         <TextInput
+          style={styles.inputTitle}
           value={editedTitle}
           onChangeText={setEditedTitle}
           placeholder="Título de la tarea"
+          placeholderTextColor="#999"
         />
         <TextInput
+          style={styles.inputDescription}
           value={editedDescription}
           onChangeText={setEditedDescription}
           placeholder="Descripción"
+          placeholderTextColor="#999"
           multiline
         />
-        <View>
-          <Button title="Cancelar" color="gray" onPress={cancelEdit} />
-          <Button title="Guardar" color="green" onPress={saveChanges} />
+        <View style={styles.actionButtons}>
+          <Pressable style={[styles.btn, styles.btnGray]} onPress={cancelEdit}>
+            <Text style={styles.btnText}>Cancelar</Text>
+          </Pressable>
+          <Pressable style={[styles.btn, styles.btnGreen]} onPress={saveChanges}>
+            <Text style={[styles.btnText, { color: '#fff' }]}>Guardar</Text>
+          </Pressable>
         </View>
       </View>
     );
   }
 
+  
   return (
-    <View>
+    <View style={styles.card}>
       <Pressable onPress={() => router.push(`/${props.id}`)}>
-        <Text>{props.title}</Text>
-        <Text>{props.description}</Text>
-        <Text>{props.completed ? "Completado" : "Pendiente"}</Text>
+        <Text style={styles.title}>{props.title}</Text>
+        <Text style={styles.description}>{props.description}</Text>
+        <Text style={[
+          styles.statusText, 
+          { color: props.completed ? '#7FDAC7' : '#F5A9B8' } 
+        ]}>
+          {props.completed ? "Completado" : "Pendiente"}
+        </Text>
       </Pressable>
 
-      <View>
-        <Button
-          title={props.completed ? "Desmarcar" : "Completar"}
+      <View style={styles.actionButtons}>
+        <Pressable 
+          style={[styles.btn, styles.btnLightGreen]} 
           onPress={toggleStatus}
-        />
-        <Button title="Editar" onPress={() => setIsEditing(true)} />
-        <Button title="Eliminar" color="#ff4444" onPress={deleteTask} />
+        >
+          <Text style={styles.btnText}>{props.completed ? "Desmarcar" : "Completar"}</Text>
+        </Pressable>
+
+        <Pressable 
+          style={[styles.btn, styles.btnBlue]} 
+          onPress={() => setIsEditing(true)}
+        >
+          <Text style={styles.btnText}>Editar</Text>
+        </Pressable>
+
+        <Pressable 
+          style={[styles.btn, styles.btnRed]} 
+          onPress={deleteTask}
+        >
+          <Text style={[styles.btnText, { color: '#fff' }]}>Eliminar</Text>
+        </Pressable>
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  card: { 
+    padding: 18, 
+    marginVertical: 10, 
+    backgroundColor: '#fff', 
+    borderRadius: 20, 
+    elevation: 1, 
+    shadowColor: '#ddd', 
+    shadowOpacity: 0.1, 
+    shadowRadius: 5, 
+    width: '100%', 
+  },
+  editingCard: {
+    borderColor: '#7FDAC7', 
+    borderWidth: 2,
+    backgroundColor: '#F3F8F5',
+  },
+  title: { 
+    fontSize: 18, 
+    fontWeight: '700', 
+    marginBottom: 5,
+    color: '#333',
+  },
+  description: {
+    marginBottom: 10,
+    color: '#666',
+    fontSize: 14,
+  },
+  statusText: {
+    fontWeight: '700',
+    fontSize: 12,
+    marginBottom: 15,
+  },
+  btn: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 20, 
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnText: {
+    fontWeight: '600',
+    fontSize: 13,
+    color: '#333',
+  },
+  
+  btnLightGreen: { backgroundColor: '#E8F1EC' },
+  btnBlue: { backgroundColor: '#A9DEF9' },
+  btnRed: { backgroundColor: '#F5A9B8' }, 
+  btnGreen: { backgroundColor: '#7FDAC7' }, 
+  btnGray: { backgroundColor: '#E0E0E0' },
+  
+  actionButtons: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    marginTop: 5, 
+  },
+  inputTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    borderBottomWidth: 1,
+    borderColor: '#7FDAC7',
+    marginBottom: 10,
+    paddingVertical: 5,
+    color: '#333',
+  },
+  inputDescription: {
+    fontSize: 14,
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
+    marginBottom: 15,
+    paddingVertical: 5,
+    minHeight: 40,
+    color: '#666',
+  },
+});

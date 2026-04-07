@@ -1,15 +1,18 @@
-import { ScrollView, Text, View, TextInput, Button, Alert } from "react-native";
+import { ScrollView, Text, View, TextInput, Alert, StyleSheet, Dimensions, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import TaskCard from "./components/TaskCard";
 
+
+const { width } = Dimensions.get('window');
+
 export default function Index() {
   const [results, setResults] = useState<any[]>([]);
-  // Estados para el formulario
+  
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
   const getTasks = async () => {
-    const URL = "http://localhost:3000/todos";
+    const URL = "http://10.10.146.60:3000/todos";
     try {
       const response = await fetch(URL, { method: "GET" });
       const jsonResponse = await response.json();
@@ -19,14 +22,14 @@ export default function Index() {
     }
   };
 
-  // Función para crear tarea
+  
   const createTask = async () => {
     if (!title.trim() || !description.trim()) {
       Alert.alert("Error", "El título y la descripción son obligatorios");
       return;
     }
 
-    const URL = "http://localhost:3000/todos";
+    const URL = "http://10.10.146.60:3000/todos";
     try {
       const response = await fetch(URL, {
         method: "POST",
@@ -55,21 +58,91 @@ export default function Index() {
   }, []);
 
   return (
-    <ScrollView>
-      <View>
-        <Text>Agregar Nueva Tarea</Text>
-        <TextInput placeholder="Título" value={title} onChangeText={setTitle} />
+    <ScrollView style={styles.container}>
+      <View style={styles.formContainer}>
+        <Text style={styles.formTitle}>Agregar Nueva Tarea</Text>
+        
+        <TextInput 
+          style={styles.input}
+          placeholder="Título" 
+          placeholderTextColor="#999"
+          value={title} 
+          onChangeText={setTitle} 
+        />
+        
         <TextInput
+          style={[styles.input, styles.textArea]}
           placeholder="Descripción"
+          placeholderTextColor="#999"
           value={description}
           onChangeText={setDescription}
+          multiline
         />
-        <Button title="Guardar Tarea" onPress={createTask} />
+        
+        <Pressable style={styles.saveButton} onPress={createTask}>
+          <Text style={styles.saveButtonText}>Guardar Tarea</Text>
+        </Pressable>
       </View>
 
-      {results?.map((task) => (
-        <TaskCard key={task.id} {...task} onRefresh={getTasks} />
-      ))}
+      <View style={styles.listContainer}>
+        {results?.map((task) => (
+          <TaskCard key={task.id} {...task} onRefresh={getTasks} />
+        ))}
+      </View>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FAFDFB', 
+    paddingHorizontal: width * 0.05,
+    paddingTop: 30,
+  },
+  formContainer: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 20, 
+    marginBottom: 25,
+    elevation: 2, 
+    shadowColor: '#ccc', 
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+  },
+  formTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#333',
+    marginBottom: 15,
+  },
+  input: {
+    backgroundColor: '#F3F8F5', 
+    padding: 12,
+    borderRadius: 12, 
+    marginBottom: 12,
+    color: '#333',
+    borderWidth: 1,
+    borderColor: '#E8F1EC',
+  },
+  textArea: {
+    minHeight: 80,
+    textAlignVertical: 'top', 
+  },
+  listContainer: {
+    paddingBottom: 40, 
+  },
+  saveButton: {
+    backgroundColor: '#7FDAC7',
+    paddingVertical: 14,
+    borderRadius: 25, 
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 5,
+  },
+  saveButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+});
