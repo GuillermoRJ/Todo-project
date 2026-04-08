@@ -10,7 +10,7 @@ export default function TaskDetail() {
   const [task, setTask] = useState<any>(null);
 
   const getSingleTask = async () => {
-    const URL = `http://10.10.146.60:3000/todos/${id}`;
+    const URL = `http://10.10.145.234:3000/todos/${id}`;
     try {
       const response = await fetch(URL);
       const jsonResponse = await response.json();

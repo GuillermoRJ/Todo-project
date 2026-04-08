@@ -12,7 +12,7 @@ export default function Index() {
   const [description, setDescription] = useState("");
 
   const getTasks = async () => {
-    const URL = "http://10.10.146.60:3000/todos";
+    const URL = "http://10.10.145.234:3000/todos";
     try {
       const response = await fetch(URL, { method: "GET" });
       const jsonResponse = await response.json();
@@ -29,7 +29,7 @@ export default function Index() {
       return;
     }
 
-    const URL = "http://10.10.146.60:3000/todos";
+    const URL = "http://10.10.145.234:3000/todos";
     try {
       const response = await fetch(URL, {
         method: "POST",

@@ -17,7 +17,7 @@ export default function TaskCard(props: TaskCardProps) {
   const [editedDescription, setEditedDescription] = useState(props.description);
 
   const toggleStatus = async () => {
-    const URL = `http://10.10.146.60:3000/todos/${props.id}`;
+    const URL = `http://10.10.145.234:3000/todos/${props.id}`;
     try {
       await fetch(URL, {
         method: "PUT",
@@ -43,7 +43,7 @@ export default function TaskCard(props: TaskCardProps) {
       return;
     }
 
-    const URL = `http://10.10.146.60:3000/todos/${props.id}`;
+    const URL = `http://10.10.145.234:3000/todos/${props.id}`;
     try {
       await fetch(URL, {
         method: "PUT",
@@ -68,7 +68,7 @@ export default function TaskCard(props: TaskCardProps) {
   };
 
   const deleteTask = async () => {
-    const URL = `http://10.10.146.60:3000/todos/${props.id}`;
+    const URL = `http://10.10.145.234:3000/todos/${props.id}`;
     try {
       await fetch(URL, { method: "DELETE" });
       props.onRefresh();
